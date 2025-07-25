@@ -20,13 +20,11 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
+    [SerializeField] private NetworkPrefabRef _playerStat;
     [SerializeField] private NetworkPrefabRef _playerPrefab;
-    [SerializeField] private GameObject _inventaryPool;
-    [SerializeField] private ShowPlayerStat _showPlayerStat;
     private InputManager inputManager;
     public Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
     private NetworkRunner _runner;
-    private Camera _camera;
 
     private void Awake()
     {
@@ -34,7 +32,6 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         inputManager = go.AddComponent<InputManager>();
 
         go.transform.parent = transform;
-        _camera = Camera.main;
     }
 
     async void StartGame(GameMode mode)
@@ -106,10 +103,13 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             // Create a unique position for the player
             Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount) * 3, 1, 0);
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
+
+            NetworkObject networkPlayerStat = runner.Spawn(_playerStat, networkPlayerObject.gameObject.transform.position, Quaternion.identity, player);
+
             _spawnedCharacters.Add(player, networkPlayerObject);
             var localPlayer = networkPlayerObject.GetComponent<PlayerCharecter>();
-            Initialization(localPlayer);
-            runner.SetPlayerObject(player, networkPlayerObject);
+
+            networkPlayerStat.GetComponent<VisionStatPlayer>().Initialization(localPlayer);
         }
     }
 
@@ -123,11 +123,11 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     }
 
 
-    private void Initialization(PlayerCharecter playerCharecter)
-    {
-        playerCharecter.Initialization(_camera, _inventaryPool);
-        _showPlayerStat.Initialization(playerCharecter.CharacterData);
-    }
+    //private void Initialization(PlayerCharecter playerCharecter)
+    //{
+    //    playerCharecter.Initialization(_camera, _inventaryPool);
+    //    _showPlayerStat.Initialization(playerCharecter.CharacterData);
+    //}
 
 
     #endregion

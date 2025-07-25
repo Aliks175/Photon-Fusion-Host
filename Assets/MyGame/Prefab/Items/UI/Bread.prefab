@@ -89,10 +89,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d90b1e1fdf72c44499077ed10c5df9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  items: 2
   _listAbility:
   - {fileID: 2346549603475512858}
   isDestroyForOver: 0
-  _name: 5
 --- !u!114 &2346549603475512858
 MonoBehaviour:
   m_ObjectHideFlags: 0

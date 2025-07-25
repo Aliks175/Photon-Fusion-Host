@@ -46,18 +46,18 @@ public class CharacterData : MonoBehaviour, ICharacterData
     private InventoryPlayer _inventory;
     private PlayerCharecter _playerCharecter;
 
-    public void Initialization(GameObject inventaryPool, PlayerCharecter playerCharecter, NetworkRunner runner)
+    public void Initialization(PlayerCharecter playerCharecter)
     {
         PlayerHealth ??= new PlayerHealth(_playerConfig.StartHealthPlayer);
         SystemLevel ??= new SystemLevel(_playerConfig.LevelLine, this);
         _inventory = GetComponent<InventoryPlayer>();
         _playerCharecter = playerCharecter;
-        SetUp( inventaryPool, runner);
+        SetUp();
     }
 
-    private void SetUp(GameObject inventaryPool,NetworkRunner runner)
+    private void SetUp()
     {
-        _inventory.Initialization(this, inventaryPool, runner);
+        _inventory.Initialization(this);
         _playerHealth.Initialization();
         _systemLevel.Initialization();
     }
@@ -71,6 +71,6 @@ public interface ICharacterData
 
     public PlayerCharecter PlayerCharecter { get; }
 
-    public abstract void Initialization(GameObject inventaryPool, PlayerCharecter playerCharecter, NetworkRunner runner);
+    public abstract void Initialization(PlayerCharecter playerCharecter);
 
 }

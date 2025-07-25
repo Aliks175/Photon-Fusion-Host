@@ -51,10 +51,10 @@ public class PlayerMove : MonoBehaviour
         _movementDirection = newMovementDirection;
     }
 
-    public void SetupPlayerMove(Camera camera)
+    public void SetupPlayerMove()
     {
         _playerRigidbody = GetComponent<Rigidbody>();
-        _mainCamera = camera;
+        _mainCamera = Camera.main;
     }
 
     private Vector3 CameraDirection(Vector3 movementDirection)

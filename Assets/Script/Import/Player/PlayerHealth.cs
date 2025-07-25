@@ -1,3 +1,4 @@
+using Fusion;
 using System;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ public class PlayerHealth : Health
         private set { _health = value; }
     }
 
+    
     public int MaxHealth
     {
         get { return _maxHealth; }
@@ -35,6 +37,8 @@ public class PlayerHealth : Health
     private int _health;
     private int _maxHealth;
     private ViewHealth viewHealth;
+
+    public event Action OnChangeMaxHealth;
 
     public PlayerHealth(int startHealth)
     {
@@ -61,6 +65,7 @@ public class PlayerHealth : Health
         maxHealth = maxHealth > 0 ? Mathf.Abs(maxHealth) : 1;
         MaxHealth = maxHealth;
         if (Health > MaxHealth) { Health = MaxHealth; }
+        OnChangeMaxHealth?.Invoke();
     }
 
     public void TakeDamage()

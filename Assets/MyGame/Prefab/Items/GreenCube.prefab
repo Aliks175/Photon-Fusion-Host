@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 9017022502364669601}
   - component: {fileID: 8342943486919104669}
   - component: {fileID: 7818711973384738114}
+  - component: {fileID: -4955462530802266780}
   m_Layer: 0
   m_Name: GreenCube
   m_TagString: Untagged
@@ -121,4 +122,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d021d63ae85790d49951b6983786e6b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uiItem: {fileID: 2414491109415634457, guid: 182767b63ae60d647828fb7c6ad008aa, type: 3}
+  items: 4
+--- !u!114 &-4955462530802266780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061417114586119273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 1206195917
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 7818711973384738114}
+  ForceRemoteRenderTimeframe: 0

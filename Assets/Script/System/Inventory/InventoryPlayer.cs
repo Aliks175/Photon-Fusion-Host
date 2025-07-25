@@ -1,28 +1,38 @@
 using Fusion;
 using UnityEngine;
 
-public class InventoryPlayer : MonoBehaviour
+public class InventoryPlayer : NetworkBehaviour
 {
-    private NetworkRunner _runner;
+    //private NetworkRunner _runner;
+    public ManagerItems _managerItems;
     public GameObject _inventaryPool;
     private ICharacterData _characterData;
 
-    public void AddItem(GameObject item)
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+    public void RPC_AddItem(int Items)
     {
-        //item = item.GetComponent<GiveItem>()._uiItem;
-        //if (item == null) return;
-        //IUiItem uiItem = item.GetComponent<IUiItem>();
-        //if (uiItem == null) return;
-        //GameObject iconItem = Instantiate(item, _inventaryPool.transform, false);
-        //iconItem.GetComponent<IUiItem>().Initialization(_characterData);
+        UiItem TempItem = _managerItems.GetUiItem(Items);
+        if (TempItem == null) { return; }
+        var IUiItem = TempItem.GetComponent<IUiItem>();
+        if (IUiItem == null) { return; }
+
+        GameObject iconItem = Instantiate(TempItem.gameObject, _inventaryPool.transform, false);
+        iconItem.GetComponent<IUiItem>().Initialization(_characterData);
     }
 
-    public void Initialization(ICharacterData characterData, GameObject inventaryPool, NetworkRunner runner)
+    public void Initialization(ICharacterData characterData)
     {
         // Здесь нужно будет что то придумать со списками 
         _characterData = characterData;
-        _inventaryPool = inventaryPool;
-        _runner = runner;
+        _managerItems = GetComponent<ManagerItems>();
+        //_runner = runner;
+
+        _inventaryPool = GameObject.Find("InventaryPool");
+
+        if (_inventaryPool == null)
+        {
+            Debug.LogError($"Not Found - inventaryPool - InventoryPlayer");
+        }
     }
 }
 

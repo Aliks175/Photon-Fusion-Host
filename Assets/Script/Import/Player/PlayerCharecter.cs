@@ -1,4 +1,5 @@
 using Fusion;
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterData), typeof(PlayerMove), typeof(PlayerAnimation))]
@@ -18,11 +19,21 @@ public class PlayerCharecter : NetworkBehaviour
 
     private bool _isReady = false;
 
+    public event Action OnUpdateStat;
+    [Networked, HideInInspector, OnChangedRender(nameof(SendMessageSub))] public int Level { get; private set; }
+    [Networked, HideInInspector, OnChangedRender(nameof(SendMessageSub))] public int Health { get; private set; }
+
 
     private void Awake()
     {
         SetupPlayerCharecter();
         _playerAnimation.SetupPlayerAnimation();
+    }
+
+    #region Photon
+    public override void Spawned()
+    {
+        Initialization();
     }
 
     public override void FixedUpdateNetwork()
@@ -49,66 +60,39 @@ public class PlayerCharecter : NetworkBehaviour
             {
                 OnDefence(false);
             }
-
             UpdatePlayerAnimationMovement();
         }
-
-
     }
+    #endregion
 
-
-    public void Initialization(Camera camera, GameObject inventaryPool)
+    public void Initialization()
     {
-
-        CharacterData.Initialization(inventaryPool, this, Runner);
+        CharacterData.Initialization(this);
         //SetUpPlayerCharecterV1_3();
-        _playerMove.SetupPlayerMove(camera);
+        _playerMove.SetupPlayerMove();
         _isReady = true;
+
+        ShowPlayerStat showPlayerStat = GameObject.FindFirstObjectByType<ShowPlayerStat>();
+        if (showPlayerStat != null)
+            showPlayerStat.Initialization(CharacterData);
+
+
+        CharacterData.SystemLevel.OnLevelUp += RPC_ViewStat;
+        CharacterData.PlayerHealth.OnChangeMaxHealth += RPC_ViewStat;
+        RPC_ViewStat();
     }
-    public void UpItemTest(NetworkObject networkObject, PlayerRef player, RpcInfo info = default)
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_ViewStat()
     {
-        Rpc_UpItem(networkObject, player);//Вызываем Rpc внутри игрока обладающего правом на ввод InputAuthority его получает хост StateAuthority
+        Level = CharacterData.SystemLevel.Level;
+        Health = CharacterData.PlayerHealth.MaxHealth;
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
-    public void Rpc_UpItem(NetworkObject networkObject, PlayerRef player, RpcInfo info = default)
+    private void SendMessageSub()
     {
-        Rpc_Create(networkObject, player); // Вызываем из Хоста , принимают все пользователи 
+        OnUpdateStat?.Invoke();
     }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    public void Rpc_Create(NetworkObject networkObject, PlayerRef player, RpcInfo info = default)
-    {
-        if (Runner.LocalPlayer == player) // Сработает только на том пользователе который поднимал предмет 
-        {
-
-            var item = networkObject.GetComponent<GiveItem>()._uiItem;
-            if (item == null) return;
-            IUiItem uiItem = item.GetComponent<IUiItem>();
-            if (uiItem == null) return;
-            GameObject iconItem = Instantiate(item, CharacterData.Inventory._inventaryPool.transform, false); // создаем предмет в инвенторе 
-            iconItem.GetComponent<IUiItem>().Initialization(_characterData);
-        }
-    }
-
-
-    //public void OnMovement(InputAction.CallbackContext value)
-    //{
-    //    if (value.phase == InputActionPhase.Performed)
-    //    {
-    //        Vector2 inputMovement = value.ReadValue<Vector2>();
-    //        _rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
-    //    }
-    //    if (value.phase == InputActionPhase.Canceled)
-    //    {
-    //        OnStopMove();
-    //    }
-    //}
-
-    //private void OnStopMove()
-    //{
-    //    _rawInputMovement = Vector3.zero;
-    //}
 
     private void OnAttack()
     {
@@ -128,47 +112,6 @@ public class PlayerCharecter : NetworkBehaviour
             _playerAnimation.PlayDefenceAnimation(false);
         }
     }
-
-
-    //private void TakeDamage()
-    //{
-    //    _playerAnimation.PlayGetDamageAnimation();
-
-    //    OnStopMove();
-
-    //    if (_coroutine == null)
-    //    {
-    //        _coroutine = StartCoroutine(OnDizzy());
-    //    }
-
-    //}
-
-    //private void OnDied()
-    //{
-    //    _playerAnimation.PlayDieAnimation();
-
-    //    _coroutine = StartCoroutine(OnRespawn());
-    //}
-
-    //private IEnumerator OnRespawn()
-    //{
-    //    yield return new WaitForSeconds(5f);
-
-    //    _characterData.PlayerHealth.FullHealth();
-    //    //_playerHealth.Respawn();
-    //    _playerAnimation.PlayRespawnAnimation();
-    //    _coroutine = null;
-    //}
-
-    //private IEnumerator OnDizzy()
-    //{
-    //    yield return new WaitForSeconds(2f);
-
-    //    _coroutine = null;
-    //}
-
-
-
 
     private void SetupPlayerCharecter()
     {

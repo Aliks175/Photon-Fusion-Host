@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3259555392614436190}
   - component: {fileID: 2629063925926625683}
+  - component: {fileID: 353845842385156457}
   - component: {fileID: 6590800348091632434}
   - component: {fileID: 8917746061138234937}
   - component: {fileID: 4148655756849019957}
@@ -19,6 +20,8 @@ GameObject:
   - component: {fileID: -1112731934414652478}
   - component: {fileID: 3276252530504056443}
   - component: {fileID: 7731157551114727247}
+  - component: {fileID: -5205275153124862122}
+  - component: {fileID: -6501840085207566344}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -65,6 +68,27 @@ CapsuleCollider:
   m_Height: 1.5
   m_Direction: 1
   m_Center: {x: 0, y: 0.75, z: 0}
+--- !u!135 &353845842385156457
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69322936341389338}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!54 &6590800348091632434
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -158,6 +182,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ffdb8eb969c4704d9f313c66273f40a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _managerItems: {fileID: 0}
+  _inventaryPool: {fileID: 0}
 --- !u!114 &-1112731934414652478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,8 +226,10 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 8917746061138234937}
   - {fileID: 4148655756849019957}
+  - {fileID: 7701247756615469480}
   - {fileID: -1112731934414652478}
   - {fileID: 7731157551114727247}
+  - {fileID: -5205275153124862122}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &7731157551114727247
 MonoBehaviour:
@@ -219,8 +247,38 @@ MonoBehaviour:
   ApplyTiming: 0
   SyncSettings: 79
   StateHashes: 0000000046980c4fd675eee037b935019e65c3e932edce8b0f563424234149bbe0c739d87f041088d675b078a289a1bd549173430d286c40fb30bebe985329956e4bfb6b
-  TriggerHashes: 000000000d286c4090d80c39a1609f62f3813327
+  TriggerHashes: 0000000090d80c39a1609f62f3813327
   TotalWords: 3
+--- !u!114 &-5205275153124862122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69322936341389338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb27cda72e6a87643a5f8d77db13ff6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-6501840085207566344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69322936341389338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9485a4e53fe6e444eb93cf386c130602, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _listUiItem:
+  - {fileID: 646692151205084021, guid: f88dfa5be5caa2d42abefdb16b4044bc, type: 3}
+  - {fileID: 646692151205084021, guid: 48386292f37750247bd77caacdf39af7, type: 3}
+  - {fileID: 646692151205084021, guid: 8e5ec466254a02b4580e7f55cb8877ff, type: 3}
+  - {fileID: 5418129092763705841, guid: 182767b63ae60d647828fb7c6ad008aa, type: 3}
+  - {fileID: 8408041165431318793, guid: 065d60fec235b4f42a25b83570cd4d8e, type: 3}
 --- !u!1 &627937235420160959
 GameObject:
   m_ObjectHideFlags: 0

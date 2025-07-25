@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4496808369484423953}
   - component: {fileID: 5598359614592519974}
   - component: {fileID: 8661085739863292011}
+  - component: {fileID: 2954980313259741872}
   m_Layer: 0
   m_Name: BlackCube
   m_TagString: Untagged
@@ -121,4 +122,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d021d63ae85790d49951b6983786e6b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uiItem: {fileID: 1212822084470756539, guid: f88dfa5be5caa2d42abefdb16b4044bc, type: 3}
+  items: 3
+--- !u!114 &2954980313259741872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4156058661789062811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 4001802480
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 8661085739863292011}
+  ForceRemoteRenderTimeframe: 0

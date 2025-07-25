@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UiItem : MonoBehaviour, IUiItem, ICrafteble
+public class UiItem : MonoBehaviour, IUiItem
 {
-    public string NameId => _name;
+    public Items Items { get { return items; } }
+    [SerializeField] private Items items;
+
     [SerializeField] private List<AbilityItem> _listAbility;
     [SerializeField] private bool isDestroyForOver = false;
-    [SerializeField] private string _name = "None";
     private ICharacterData _characterData;
 
     public void Initialization(ICharacterData characterData)
