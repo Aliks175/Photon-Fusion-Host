@@ -19,6 +19,8 @@ public class PlayerCharecter : NetworkBehaviour
 
     private bool _isReady = false;
 
+    [HideInInspector] public bool SubView = false;
+
     public event Action OnUpdateStat;
     [Networked, HideInInspector, OnChangedRender(nameof(SendMessageSub))] public int Level { get; private set; }
     [Networked, HideInInspector, OnChangedRender(nameof(SendMessageSub))] public int Health { get; private set; }
@@ -68,7 +70,6 @@ public class PlayerCharecter : NetworkBehaviour
     public void Initialization()
     {
         CharacterData.Initialization(this);
-        //SetUpPlayerCharecterV1_3();
         _playerMove.SetupPlayerMove();
         _isReady = true;
 
@@ -79,14 +80,23 @@ public class PlayerCharecter : NetworkBehaviour
 
         CharacterData.SystemLevel.OnLevelUp += RPC_ViewStat;
         CharacterData.PlayerHealth.OnChangeMaxHealth += RPC_ViewStat;
-        RPC_ViewStat();
+        Level = CharacterData.SystemLevel.Level;
+        Health = CharacterData.PlayerHealth.MaxHealth;
     }
+
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void RPC_ViewStat()
     {
+        RPC_View();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_View()
+    {
         Level = CharacterData.SystemLevel.Level;
         Health = CharacterData.PlayerHealth.MaxHealth;
+        SendMessageSub();
     }
 
     private void SendMessageSub()

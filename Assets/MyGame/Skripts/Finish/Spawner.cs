@@ -103,13 +103,9 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             // Create a unique position for the player
             Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount) * 3, 1, 0);
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
-
-            NetworkObject networkPlayerStat = runner.Spawn(_playerStat, networkPlayerObject.gameObject.transform.position, Quaternion.identity, player);
-
             _spawnedCharacters.Add(player, networkPlayerObject);
-            var localPlayer = networkPlayerObject.GetComponent<PlayerCharecter>();
-
-            networkPlayerStat.GetComponent<VisionStatPlayer>().Initialization(localPlayer);
+            NetworkObject networkPlayerStat = runner.Spawn(_playerStat, networkPlayerObject.gameObject.transform.position, Quaternion.identity, player);
+          
         }
     }
 
