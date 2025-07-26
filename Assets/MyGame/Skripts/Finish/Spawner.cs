@@ -24,6 +24,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     private InputManager inputManager;
     public Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
+    public Dictionary<PlayerRef, NetworkObject> _spawnedStat = new Dictionary<PlayerRef, NetworkObject>();
     private NetworkRunner _runner;
 
     private void Awake()
@@ -105,7 +106,9 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
             _spawnedCharacters.Add(player, networkPlayerObject);
             NetworkObject networkPlayerStat = runner.Spawn(_playerStat, networkPlayerObject.gameObject.transform.position, Quaternion.identity, player);
-          
+            _spawnedStat.Add(player, networkPlayerStat);
+
+
         }
     }
 
@@ -115,7 +118,16 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         {
             runner.Despawn(networkObject);
             _spawnedCharacters.Remove(player);
+            runner.Despawn(networkObject);
+            _spawnedStat.Remove(player);
         }
+
+        if (_spawnedStat.TryGetValue(player, out NetworkObject networkStat))
+        {
+            runner.Despawn(networkStat);
+            _spawnedStat.Remove(player);
+        }
+
     }
 
 
