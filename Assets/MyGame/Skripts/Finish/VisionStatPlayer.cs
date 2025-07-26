@@ -71,10 +71,14 @@ public class VisionStatPlayer : NetworkBehaviour
         _playerCharecter.OnUpdateStat += View;
         _target = _playerCharecter.transform;
         View();
+        Debug.Log(_playerCharecter.Object.Name);
+       
     }
 
     public void View()
     {
+        if(Object.HasStateAuthority == false) return;
+
         string text = $"Level : {_playerCharecter.Level}\nHP : {_playerCharecter.Health}";
         tempText = text;
         _statTextPlayer.SetText(text);
