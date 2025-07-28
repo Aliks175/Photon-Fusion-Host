@@ -11,7 +11,7 @@ public class CharacterData : MonoBehaviour, ICharacterData
         {
             if (_playerHealth == null)
             {
-                PlayerHealth = new PlayerHealth(_playerConfig.StartHealthPlayer);
+                PlayerHealth = new PlayerHealth(_playerConfig.StartHealthPlayer,this);
             }
             return _playerHealth;
         }
@@ -48,7 +48,7 @@ public class CharacterData : MonoBehaviour, ICharacterData
 
     public void Initialization(PlayerCharecter playerCharecter)
     {
-        PlayerHealth ??= new PlayerHealth(_playerConfig.StartHealthPlayer);
+        PlayerHealth ??= new PlayerHealth(_playerConfig.StartHealthPlayer, this);
         SystemLevel ??= new SystemLevel(_playerConfig.LevelLine, this);
         _inventory = GetComponent<InventoryPlayer>();
         _playerCharecter = playerCharecter;

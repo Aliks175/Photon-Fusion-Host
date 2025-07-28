@@ -33,7 +33,7 @@ public class ShowPlayerStat : MonoBehaviour
         UpdateUi(expData);// обновляем Ui
     }
 
-    private void ChangeLevel()// отработало сабытие получение уровня 
+    private void ChangeLevel( int a)// отработало сабытие получение уровня 
     {
         Debug.Log("Level UP");
     }

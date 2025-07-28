@@ -33,16 +33,17 @@ public class PlayerHealth : Health
 
     public Action OnHited;
     public Action OnDied;
-
+    private CharacterData _characterData;
     private int _health;
     private int _maxHealth;
     private ViewHealth viewHealth;
 
-    public event Action OnChangeMaxHealth;
+    public event Action<int> OnChangeMaxHealth;
 
-    public PlayerHealth(int startHealth)
+    public PlayerHealth(int startHealth, CharacterData characterData)
     {
         MaxHealth = startHealth;
+        _characterData = characterData;
     }
 
     public void Initialization()
@@ -51,6 +52,7 @@ public class PlayerHealth : Health
         if (viewHealth == null) { Debug.LogError($"Not Found ViewHealth In PlayerHealth"); }
         else { viewHealth.Health = MaxHealth.ToString(); }
         FullHealth();
+        OnChangeMaxHealth?.Invoke(_maxHealth);
     }
 
     public void TakeHealth(int health)
@@ -65,7 +67,7 @@ public class PlayerHealth : Health
         maxHealth = maxHealth > 0 ? Mathf.Abs(maxHealth) : 1;
         MaxHealth = maxHealth;
         if (Health > MaxHealth) { Health = MaxHealth; }
-        OnChangeMaxHealth?.Invoke();
+        OnChangeMaxHealth?.Invoke(MaxHealth);
     }
 
     public void TakeDamage()
