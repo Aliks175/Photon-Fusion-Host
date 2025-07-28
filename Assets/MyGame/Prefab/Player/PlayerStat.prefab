@@ -218,8 +218,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6421386882722683565}
   - component: {fileID: 1278581304338783923}
-  - component: {fileID: 4500742862067576856}
-  - component: {fileID: 5670100442253738009}
   m_Layer: 0
   m_Name: PlayerStat
   m_TagString: Untagged
@@ -256,41 +254,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _statTextPlayer: {fileID: 4993298455251431246}
-  _tempText: 
---- !u!114 &4500742862067576856
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4036621224590084521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 277478057
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 1278581304338783923}
-  - {fileID: 5670100442253738009}
-  ForceRemoteRenderTimeframe: 0
---- !u!114 &5670100442253738009
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4036621224590084521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _stateAuthorityChangeErrorCorrectionDelta: 0
-  SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
+  _speed: 20

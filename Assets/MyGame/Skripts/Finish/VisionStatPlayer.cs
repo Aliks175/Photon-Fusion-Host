@@ -1,82 +1,48 @@
-using Fusion;
-using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class VisionStatPlayer : NetworkBehaviour
+public class VisionStatPlayer : MonoBehaviour
 {
     [SerializeField] private TextMeshPro _statTextPlayer;
-
-    [Networked] public string tempText { get; set; }
-    private ChangeDetector _changeDetector;
-
+    [SerializeField] private float _speed = 1;
     private PlayerCharecter _playerCharecter;
     private Transform _target;
+    private bool _isReady = false;
 
-    private void OnDisable()
+    private void Update()
     {
-        _playerCharecter.OnUpdateStat -= View;
-    }
-
-    public override void Spawned()
-    {
-        _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
-        IEnumerable<NetworkObject> data = Spawner.Instance._spawnedCharacters.Values;
-        var serializedData = data.Select(@object => @object.GetComponent<PlayerCharecter>()).ToList();
-        foreach (var Player in serializedData)
+        if (!_isReady) return;
+        if (_target == null)
         {
-            if (!Player.SubView)
-            {
-                Player.SubView = true;
-                _playerCharecter = Player;
-                break;
-            }
-        }
-
-        if (_playerCharecter == null)
-        {
-            Runner.Despawn(Object);
+            Destroy(gameObject);
         }
         else
         {
-            Initialization();
+            transform.position = Vector3.Lerp(transform.position, _target.position, Time.deltaTime * _speed);
         }
     }
 
-    public override void FixedUpdateNetwork()
+    public void Initialization(PlayerCharecter playerCharecter)
     {
-        if (Object.HasStateAuthority == false) return;
-        if (_target == null) Runner.Despawn(Object);
-        transform.position = _target.position;
-    }
-
-    public override void Render()
-    {
-        foreach (var change in _changeDetector.DetectChanges(this))
-        {
-            switch (change)
-            {
-                case nameof(tempText):
-
-                    _statTextPlayer.SetText(tempText);
-
-                    break;
-            }
-        }
-    }
-
-    private void Initialization()
-    {
+        _playerCharecter = playerCharecter;
         _playerCharecter.OnUpdateStat += View;
         _target = _playerCharecter.transform;
+        _isReady = true;
         View();
+
+        var a = FindObjectsByType<PlayerCharecter>(FindObjectsSortMode.None);
+        foreach (var item in a)
+        {
+            if (item != _playerCharecter)
+            {
+                item.SubShow();
+            }
+        }
     }
 
     public void View()
     {
-        string text = $"Level : {_playerCharecter.Level}\nHP : {_playerCharecter.Health}";
-        tempText = text;
-        _statTextPlayer.SetText(text);
+        string tempText = $"Level : {_playerCharecter.Level}\nHP : {_playerCharecter.Health}";
+        _statTextPlayer.SetText(tempText);
     }
 }

@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class PlayerCharecter : NetworkBehaviour
 {
+    [SerializeField] private GameObject _playerStat;
+    private VisionStatPlayer visionStatPlayer;
     public ICharacterData CharacterData { get { return _characterData; } private set { _characterData = value; } }
     [SerializeField] private float _movementSmoothingSpeed = 1f;
 
@@ -19,17 +21,16 @@ public class PlayerCharecter : NetworkBehaviour
 
     private bool _isReady = false;
 
-    [HideInInspector] public bool SubView = false;
-
     public event Action OnUpdateStat;
-    [Networked, HideInInspector, OnChangedRender(nameof(SendMessageSub))] public int Level { get; private set; }
-    [Networked, HideInInspector, OnChangedRender(nameof(SendMessageSub))] public int Health { get; private set; }
+    [Networked,HideInInspector, OnChangedRender(nameof(SendMessageSub))] public int Level { get; set; }
+    [Networked, HideInInspector, OnChangedRender(nameof(SendMessageSub))] public int Health { get; set; }
 
 
     private void Awake()
     {
         SetupPlayerCharecter();
         _playerAnimation.SetupPlayerAnimation();
+
     }
 
     #region Photon
@@ -77,26 +78,46 @@ public class PlayerCharecter : NetworkBehaviour
         if (showPlayerStat != null)
             showPlayerStat.Initialization(CharacterData);
 
+        if (HasInputAuthority)
+        {
+            Debug.Log($"кто я - я : {Object.Name}");
+        }
 
-        CharacterData.SystemLevel.OnLevelUp += RPC_ViewStat;
-        CharacterData.PlayerHealth.OnChangeMaxHealth += RPC_ViewStat;
-        Level = CharacterData.SystemLevel.Level;
-        Health = CharacterData.PlayerHealth.MaxHealth;
+        CharacterData.SystemLevel.OnLevelUp += (_) => Use(_, RPC_LevelUp);
+        CharacterData.PlayerHealth.OnChangeMaxHealth += (_) => Use(_, RPC_MaxHealth);
+        SubShow();
+        CharacterData.PlayerHealth.Initialization();
+        CharacterData.SystemLevel.Initialization();
     }
 
+    private void Use(int Value, Action<int> action)
+    {
+        if (HasInputAuthority)
+        {
+            action?.Invoke(Value);
+        }
+    }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    public void RPC_ViewStat()
+    public void RPC_LevelUp(int value)
     {
-        RPC_View();
+        Level = value;
     }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_View()
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_MaxHealth(int value)
     {
-        Level = CharacterData.SystemLevel.Level;
-        Health = CharacterData.PlayerHealth.MaxHealth;
-        SendMessageSub();
+        Health = value;
+    }
+
+    public void SubShow()
+    {
+        if (visionStatPlayer == null)
+        {
+            var b = GameObject.Instantiate(_playerStat, transform.position, Quaternion.identity);
+            visionStatPlayer = b.GetComponent<VisionStatPlayer>();
+            visionStatPlayer.Initialization(this);
+        }
     }
 
     private void SendMessageSub()

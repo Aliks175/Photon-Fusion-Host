@@ -1,4 +1,3 @@
-using Fusion;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,7 +16,7 @@ public class SystemLevel
 
     public event Action<SystemLevelData> OnSetUp;
     public event Action<SystemLevelData> OnChangeExp;
-    public event Action OnLevelUp;
+    public event Action<int> OnLevelUp;
 
     public SystemLevel(LevelLine levelLine, CharacterData characterData)
     {
@@ -36,7 +35,7 @@ public class SystemLevel
             while (Level < Leveltemp)
             {
                 Level++;
-                OnLevelUp?.Invoke();
+                OnLevelUp?.Invoke(Level);
             }
         }
     }
@@ -102,6 +101,7 @@ public class SystemLevel
             _expDoNextLevel = _expDoNextLevel,
             _rangeExpDoNextLevel = _procentExpDoNextLevel
         });
+        OnLevelUp?.Invoke(Level);
     }
 }
 /// <summary>

@@ -1,3 +1,4 @@
+using Fusion;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
@@ -15,34 +16,53 @@ public class PlayerMove : MonoBehaviour
 
     [SerializeField] private float _movementSpeed = 3f;
     [SerializeField] private float _turnSpeed = 0.1f;
+    [SerializeField] private float gravityValue = -9.8f;
     public float _speedRun = 15f;
     public float _speedWalk = 7f;
 
     private Camera _mainCamera;
-    private Rigidbody _playerRigidbody;
+    private CharacterController _player;
     private Vector3 _movementDirection;
 
 
-    public void Move(float deltaTime)
+    public void Move(float delta )
     {
-        MoveThePlayer(deltaTime);
+        MoveThePlayer(delta);
         TurnThePlayer();
     }
 
-    private void MoveThePlayer(float deltaTime)
+    private void MoveThePlayer(float delta)
     {
-        Vector3 movement = CameraDirection(_movementDirection) * _movementSpeed * deltaTime;
-        _playerRigidbody.MovePosition(transform.position + movement);
+        Vector3 gravity = Vector3.zero;
+
+        Vector3 movement = CameraDirection(_movementDirection) * _movementSpeed;
+       
+        if (_player.isGrounded || gravity.y < 0)
+        {
+            gravity.y = 0;
+        }
+
+        movement.y += gravityValue * delta;
+        _player.Move(movement * delta);
+
+        //_player.Move(gravity * delta);
     }
 
     private void TurnThePlayer()
     {
         if (_movementDirection.sqrMagnitude > 0.01f)
         {
-            Quaternion rotation = Quaternion.Slerp(_playerRigidbody.rotation,
+
+            Quaternion rotation = Quaternion.Slerp(transform.rotation,
                                                  Quaternion.LookRotation(CameraDirection(_movementDirection)),
                                                  _turnSpeed);
-            _playerRigidbody.MoveRotation(rotation);
+           transform.rotation = rotation;
+
+            //Quaternion rotation = Quaternion.Slerp(_playerRigidbody.rotation,
+            //                                     Quaternion.LookRotation(CameraDirection(_movementDirection)),
+            //                                     _turnSpeed);
+
+            //_playerRigidbody.MoveRotation(rotation);
         }
     }
 
@@ -53,7 +73,8 @@ public class PlayerMove : MonoBehaviour
 
     public void SetupPlayerMove()
     {
-        _playerRigidbody = GetComponent<Rigidbody>();
+        _player = GetComponent<CharacterController>();
+
         _mainCamera = Camera.main;
     }
 
